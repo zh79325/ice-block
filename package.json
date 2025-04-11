@@ -45,20 +45,22 @@
     "component"
   ],
   "dependencies": {
+    "@ant-design/pro-layout": "^7.22.4",
+    "@ice/jsx-runtime": "^0.2.0",
     "@swc/helpers": "^0.5.1",
-    "@ice/jsx-runtime": "^0.2.0"
+    "antd": "^5.24.6"
   },
   "devDependencies": {
+    "@ali/pkg-plugin-dev": "^1.0.0",
+    "@ali/pkg-plugin-dev-client": "^1.0.0",
     "@applint/spec": "^1.2.3",
     "@ice/pkg": "^1.0.0",
     "@ice/runtime": "^1.0.0",
-    "@ali/pkg-plugin-dev": "^1.0.0",
-    "@ali/pkg-plugin-dev-client": "^1.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "eslint": "^8.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
     "stylelint": "^15.0.0"
   },
   "peerDependencies": {

@@ -1,0 +1,20 @@
+.roomBlock {
+  height: calc(var(--height) * 1px);
+  width: calc(var(--width) * 1px);
+  border: #1F1F1F solid;
+  position: relative;
+}
+.blockSub{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(var(--height) * 1px);
+  width: calc(var(--width) * 1px);
+  border: #1F1F1F dashed;
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  bottom: calc(var(--y) * 1px);
+}
+.blockText{
+  transform: rotate(calc(var(--rotate) * 90deg));
+}
