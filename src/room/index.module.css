@@ -16,5 +16,18 @@
   bottom: calc(var(--y) * 1px);
 }
 .blockText{
+  text-align: center;
   transform: rotate(calc(var(--rotate) * 90deg));
+  word-break: keep-all;
+  white-space: nowrap;
+}
+
+.roomList{
+  display: flex;
+  flex-wrap: wrap;
+  margin: -8px 0 0 -8px;
+
+}
+.roomContainer{
+  margin: 8px 0 0 8px;
 }

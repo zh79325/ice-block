@@ -11,6 +11,9 @@ interface Block {
     width: number;
     height: number;
 }
+interface BlockInstance extends Block{
+    name:string;
+}
 
 interface SbuBlock {
     width: number;
@@ -27,7 +30,7 @@ interface House {
     rooms: Array<Room>;
 }
 
-interface BlockPos extends Block {
+interface BlockPos extends BlockInstance {
     x: number;
     y: number;
 }
@@ -38,18 +41,19 @@ interface BlockSplit {
 }
 
 const RoomBlockIndex: React.FC = () => {
-    const defaultBolck: Block = {
+    const defaultBlock: Block = {
         width: 750,
         height: 1500,
     };
     const [block, setBlock] = useState<Block>({
-        ...defaultBolck,
+        ...defaultBlock,
     });
     const [result, setResult] = useState({
         area: 0,
         count: 0,
         subTotal: 0,
     });
+    const [offset,setOffset]=useState(5)
     const types = {
         wall,
         ground,
@@ -63,13 +67,14 @@ const RoomBlockIndex: React.FC = () => {
     };
 
 
-    function findPos(m: BlockSplit, b: Block) {
+    function findPos(m: BlockSplit, b: Block,off:number) {
         let area = 0;
         let w = 0;
         for (let i = 0; i < m.subList.length; i++) {
             const sb = m.subList[i];
             area += sb.width * sb.height;
             w += sb.width;
+            w+=off;
         }
         if (area + b.width * b.height > m.block.width * m.block.height) {
             return null;
@@ -85,7 +90,7 @@ const RoomBlockIndex: React.FC = () => {
 
     const startCalc = () => {
         let area = 0;
-        const blockList: Block[] = [];
+        const blockList: BlockInstance[] = [];
         for (let i = 0; i < house.rooms.length; i++) {
             let room = house.rooms[i];
             for (let j = 0; j < room.blocks.length; j++) {
@@ -93,21 +98,17 @@ const RoomBlockIndex: React.FC = () => {
                 area += sbuBlock.width * sbuBlock.height * sbuBlock.count;
                 for (let k = 0; k < sbuBlock.count; k++) {
                     blockList.push({
+                        name:room.name,
                         width: sbuBlock.width,
                         height: sbuBlock.height,
                     });
                 }
             }
         }
-        const blockResult = [];
-        let newBlock = {
-            block: block,
-            sub: [],
-        };
-        const sameList: Block[] = [];
-        const sameWidthList: Block[] = [];
-        const sameHeightList: Block[] = [];
-        const otherList: Block[] = [];
+        const sameList: BlockInstance[] = [];
+        const sameWidthList: BlockInstance[] = [];
+        const sameHeightList: BlockInstance[] = [];
+        const otherList: BlockInstance[] = [];
         for (let i = 0; i < blockList.length; i++) {
             let b = blockList[i];
             if (b.width == block.width && b.height == block.height) {
@@ -118,6 +119,7 @@ const RoomBlockIndex: React.FC = () => {
                 sameHeightList.push(b);
             } else {
                 b = {
+                    ...b,
                     width: b.height,
                     height: b.width,
                 };
@@ -138,8 +140,7 @@ const RoomBlockIndex: React.FC = () => {
             resultList.push({
                 block: block,
                 subList: [{
-                    width: sameList[i].width,
-                    height: sameList[i].height,
+                    ...sameList[i],
                     x: 0,
                     y: 0,
                 }],
@@ -159,11 +160,11 @@ const RoomBlockIndex: React.FC = () => {
                 let h = 0;
                 for (let j = 0; j < m.subList.length; j++) {
                     h += m.subList[j].height;
+                    h+=offset;
                 }
                 if (b.height + h < m.block.height) {
                     m.subList.push({
-                        width: b.width,
-                        height: b.height,
+                        ...b,
                         x: 0,
                         y: h,
                     });
@@ -177,8 +178,7 @@ const RoomBlockIndex: React.FC = () => {
             wideMergeList.push({
                 block: block,
                 subList: [{
-                    width: b.width,
-                    height: b.height,
+                   ...b,
                     x: 0,
                     y: 0,
                 }],
@@ -199,11 +199,11 @@ const RoomBlockIndex: React.FC = () => {
                 let w = 0;
                 for (let j = 0; j < m.subList.length; j++) {
                     w += m.subList[j].width;
+                    w+=offset;
                 }
                 if (b.width + w < m.block.width) {
                     m.subList.push({
-                        width: b.width,
-                        height: b.height,
+                        ...b,
                         x: w,
                         y: 0,
                     });
@@ -217,8 +217,7 @@ const RoomBlockIndex: React.FC = () => {
             heightMergeList.push({
                 block: block,
                 subList: [{
-                    width: b.width,
-                    height: b.height,
+                    ...b,
                     x: 0,
                     y: 0,
                 }],
@@ -244,11 +243,10 @@ const RoomBlockIndex: React.FC = () => {
             let find = false;
             for (let i = 0; i < resultList.length; i++) {
                 const m = resultList[i];
-                const pos = findPos(m, b);
+                const pos = findPos(m, b,offset);
                 if (pos != null) {
                     m.subList.push({
-                        width: b.width,
-                        height: b.height,
+                        ...b,
                         x: pos.x,
                         y: pos.y,
                     });
@@ -262,8 +260,7 @@ const RoomBlockIndex: React.FC = () => {
             resultList.push({
                 block: block,
                 subList: [{
-                    width: b.width,
-                    height: b.height,
+                    ...b,
                     x: 0,
                     y: 0,
                 }],
@@ -299,9 +296,9 @@ const RoomBlockIndex: React.FC = () => {
           </Form.Item>
           <Form.Item label="瓷砖尺寸">
             <Form layout="inline">
-              <Form.Item label="宽">
+              <Form.Item>
                 <InputNumber
-                  type="nb"
+                  addonBefore="宽"
                   value={block.width}
                   onChange={(e) => {
                                 block.width = e;
@@ -309,8 +306,9 @@ const RoomBlockIndex: React.FC = () => {
                             }}
                 />
               </Form.Item>
-              <Form.Item label="高">
+              <Form.Item>
                 <InputNumber
+                    addonBefore="高"
                   value={block.height}
                   onChange={(e) => {
                                 block.height = e;
@@ -318,14 +316,44 @@ const RoomBlockIndex: React.FC = () => {
                             }}
                 />
               </Form.Item>
+                <Form.Item>
+                    <InputNumber
+                        addonBefore="切割缝隙"
+                        value={offset}
+                        onChange={(e) => {
+                           setOffset(e)
+                        }}
+                    />
+                </Form.Item>
             </Form>
           </Form.Item>
+            <Form.Item>
+                <div style={{
+                    display: 'flex',
+                    rowGap: 16,
+                    flexDirection: 'column',
+                }}
+                >
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            house.rooms.push({
+                                name: '',
+                                blocks: [],
+                            });
+                            setHouse({ ...house });
+                        }}
+                        block
+                    >
+                        + 添加房间
+                    </Button>
+                </div>
+            </Form.Item>
           <Form.Item label="房间">
             <Form
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
-              name="dynamic_form_complex"
-              style={{ maxWidth: 600 }}
+              className={styles.roomList}
               autoComplete="off"
             >
               {house.rooms.map((room, i) => (<Form.Item>
@@ -333,7 +361,10 @@ const RoomBlockIndex: React.FC = () => {
                                 display: 'flex',
                                 rowGap: 16,
                                 flexDirection: 'column',
+                                maxWidth: 400,
+                                minWidth:400
                             }}
+                     className={styles.roomContainer}
                 >
                   <Card
                     size="small"
@@ -367,7 +398,7 @@ const RoomBlockIndex: React.FC = () => {
                       >
                         {room.blocks.map((block, j) => (<Space key={`b${j}`}>
                             <Form.Item noStyle>
-                                <InputNumber
+                                <InputNumber addonBefore="宽"
                                     value={block.width} placeholder="宽" onChange={e => {
                                                             block.width = e;
                                                             setHouse({ ...house });
@@ -375,7 +406,7 @@ const RoomBlockIndex: React.FC = () => {
                                   />
                               </Form.Item>
                             <Form.Item noStyle>
-                                <InputNumber
+                                <InputNumber addonBefore="高"
                                     value={block.height} placeholder="高" onChange={e => {
                                                             block.height = e;
                                                             setHouse({ ...house });
@@ -384,6 +415,7 @@ const RoomBlockIndex: React.FC = () => {
                               </Form.Item>
                             <Form.Item noStyle>
                                 <InputNumber
+                                    addonAfter="片"
                                     value={block.count} placeholder="片数" onChange={e => {
                                                             block.count = e;
                                                             setHouse({ ...house });
@@ -414,51 +446,35 @@ const RoomBlockIndex: React.FC = () => {
 
                 </div>
               </Form.Item>))}
-              <Form.Item>
-                <div style={{
-                                display: 'flex',
-                                rowGap: 16,
-                                flexDirection: 'column',
-                            }}
-                >
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                                    house.rooms.push({
-                                        name: '',
-                                        blocks: [],
-                                    });
-                                    setHouse({ ...house });
-                                }}
-                    block
-                  >
-                    + 添加房间
-                  </Button>
-                </div>
-              </Form.Item>
             </Form>
           </Form.Item>
-          <Form.Item>
-            <Space.Compact>
-              <Button type="primary" onClick={startCalc}>计算</Button>
-            </Space.Compact>
-          </Form.Item>
-          {/* <Form.Item noStyle shouldUpdate hidden> */}
-          {/*     {() => { */}
-          {/*         return ( */}
-          {/*             <Typography> */}
-          {/*                 <pre>{JSON.stringify(house, null, 2)}</pre> */}
-          {/*             </Typography> */}
-          {/*         ) */}
-          {/*     }} */}
-          {/* </Form.Item> */}
-          {result.count > 0 && <>
-            <Form.Item noStyle>
-              <Alert
-                message="计算结果"
-                description={<div>
-                  总面积为:<b>{result.area / 1000 / 1000}</b>平方米,理论上需要<b>{result.count}</b>块砖，实际有<b>{result.subTotal}</b>块
-                  <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed>
+            <Form.Item>
+                <div style={{
+                    display: 'flex',
+                    rowGap: 16,
+                    flexDirection: 'column',
+                }}
+                >
+                    <Button type="primary" onClick={startCalc}>计算</Button>
+                </div>
+
+            </Form.Item>
+            {/* <Form.Item noStyle shouldUpdate hidden> */}
+            {/*     {() => { */}
+            {/*         return ( */}
+            {/*             <Typography> */}
+            {/*                 <pre>{JSON.stringify(house, null, 2)}</pre> */}
+            {/*             </Typography> */}
+            {/*         ) */}
+            {/*     }} */}
+            {/* </Form.Item> */}
+            {result.count > 0 && <>
+                <Form.Item noStyle>
+                    <Alert
+                        message="计算结果"
+                        description={<div>
+                            总面积为:<b>{result.area / 1000 / 1000}</b>平方米,理论上需要<b>{result.count}</b>块砖，实际有<b>{result.subTotal}</b>块
+                            <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed>
                     系统优化后共
                   </Divider>
                   <b>{splitResultList.length}</b>块
@@ -467,7 +483,7 @@ const RoomBlockIndex: React.FC = () => {
               />
             </Form.Item>
             <Form.Item label="显示尺寸">
-              <Slider value={size} onChange={e => setSize(e)} />
+              <Slider min={0} max={100} value={size}  onChange={e => setSize(e)} />
             </Form.Item>
             </>}
         </Form>
@@ -486,12 +502,14 @@ const RoomBlockIndex: React.FC = () => {
                   style={{
                             '--height': buildSize(b.height),
                             '--width': buildSize(b.width),
+                            '--real-width': b.width,
                             '--x': buildSize(b.x),
                             '--y': buildSize(b.y),
                         }}
                 >
-                  <div className={styles.blockText} style={{ '--rotate': (b.width * 3 < b.height ? 1 : 0) }}>
-                    <b>{b.width}*{b.height}</b></div>
+                    <div className={styles.blockText} style={{ '--rotate': (b.width * 1.5 < b.height ? 1 : 0) }}>
+                        <b>{b.name} {b.width}*{b.height} </b>
+                    </div>
                 </div>))}
               </div>
                 ))}
