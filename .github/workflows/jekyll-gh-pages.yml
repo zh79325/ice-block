@@ -30,6 +30,10 @@ jobs:
         uses: actions/setup-node@v4.3.0
       - name: Checkout
         uses: actions/checkout@v4
+      - name: show path
+        run: pwd
+      - name: List files
+        run: ls -l
       - name: Set up dependencies
         run: npm install
       - name: Node Build Page
