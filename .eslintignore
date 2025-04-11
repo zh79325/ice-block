@@ -1,12 +1,12 @@
-# See https://eslint.org/docs/latest/user-guide/configuring/ignoring-code for more about ignoring files.
-.docusaurus/
-node_modules/
+# 忽略目录
+build/
+tests/
+demo/
+.ice/
+
+# node 覆盖率文件
+coverage/
+
+# 忽略文件
 **/*-min.js
 **/*.min.js
-coverage/
-cjs/
-esm/
-es2017/
-dist/
-build/
-tmp/

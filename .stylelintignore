@@ -1,11 +1,7 @@
-.docusaurus/
-node_modules/
-**/*-min.css
-**/*.min.css
-coverage/
-cjs/
-esm/
-es2017/
-dist/
+# 忽略目录
 build/
-tmp/
+tests/
+demo/
+
+# node 覆盖率文件
+coverage/

@@ -1,1 +1,1 @@
-/// <reference types="@ice/pkg/types" />
+/// <reference types="@ice/app/types" />
