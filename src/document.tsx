@@ -3,6 +3,7 @@
  */
 import { Meta, Title, Links, Main, Scripts } from 'ice';
 import { description } from '../package.json';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 export default function Document() {
   return (
@@ -17,7 +18,9 @@ export default function Document() {
         <Links />
       </head>
       <body>
-        <Main />
+        <AntdRegistry>
+          <Main />
+        </AntdRegistry>
         <Scripts />
       </body>
     </html>

@@ -295,8 +295,7 @@ export default function IndexPage() {
             />
           </Form.Item>
           <Form.Item label="瓷砖尺寸">
-            <Form layout="inline">
-              <Form.Item>
+            <div>
                 <InputNumber
                     addonBefore="宽"
                     value={block.width}
@@ -305,8 +304,6 @@ export default function IndexPage() {
                       setBlock({ ...block });
                     }}
                 />
-              </Form.Item>
-              <Form.Item>
                 <InputNumber
                     addonBefore="高"
                     value={block.height}
@@ -315,8 +312,6 @@ export default function IndexPage() {
                       setBlock({ ...block });
                     }}
                 />
-              </Form.Item>
-              <Form.Item>
                 <InputNumber
                     addonBefore="切割缝隙"
                     value={offset}
@@ -324,8 +319,7 @@ export default function IndexPage() {
                       setOffset(e)
                     }}
                 />
-              </Form.Item>
-            </Form>
+            </div>
           </Form.Item>
           <Form.Item>
             <div style={{
@@ -349,14 +343,8 @@ export default function IndexPage() {
               </Button>
             </div>
           </Form.Item>
-          <Form.Item label="房间">
-            <Form
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
-                className={styles.roomList}
-                autoComplete="off"
-            >
-              {house.rooms.map((room, i) => (<Form.Item>
+          <Form.Item label="房间" >
+              <div className={styles.roomList}>{house.rooms.map((room, i) => (<Form.Item key={'r_'+i}>
                 <div style={{
                   display: 'flex',
                   rowGap: 16,
@@ -445,8 +433,7 @@ export default function IndexPage() {
 
 
                 </div>
-              </Form.Item>))}
-            </Form>
+              </Form.Item>))}</div>
           </Form.Item>
           <Form.Item>
             <div style={{
@@ -499,6 +486,7 @@ export default function IndexPage() {
               >
                 {s.subList.map((b, j) => (<div
                     className={styles.blockSub}
+                    key={'bi'+j}
                     style={{
                       '--height': buildSize(b.height),
                       '--width': buildSize(b.width),
