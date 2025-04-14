@@ -32,6 +32,8 @@ jobs:
         uses: actions/setup-node@v4.3.0
       - name: show path
         run: pwd
+      - name: show node version
+        run: npm --version
       - name: List files
         run: ls -l
       - name: Set up dependencies
