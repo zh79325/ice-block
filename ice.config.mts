@@ -4,6 +4,7 @@ import { defineConfig } from '@ice/app';
 const minify = process.env.NODE_ENV === 'production' ? 'swc' : false;
 export default defineConfig(() => ({
   publicPath:'./',
+  devPublicPath:'./',
   // Set your configs here.
   minify,
   server: {
