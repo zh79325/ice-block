@@ -26,10 +26,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4.3.0
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.3.0
       - name: show path
         run: pwd
       - name: List files
