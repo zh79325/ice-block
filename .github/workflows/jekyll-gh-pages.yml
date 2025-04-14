@@ -33,7 +33,7 @@ jobs:
       - name: List files
         run: ls -l
       - name: Set up dependencies
-        run: npm cli
+        run: npm ci
       - name: Node Build Page
         run: npm run build
       - name: Setup Pages
