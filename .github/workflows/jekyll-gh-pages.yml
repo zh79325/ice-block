@@ -28,6 +28,9 @@ jobs:
     steps:
      - name: Setup Node.js environment
        uses: actions/setup-node@v4.3.0
+       with:
+        cache: 'npm'
+        cache-dependency-path: './package-lock.json'
   build:
     runs-on: ubuntu-latest
     needs: setup
